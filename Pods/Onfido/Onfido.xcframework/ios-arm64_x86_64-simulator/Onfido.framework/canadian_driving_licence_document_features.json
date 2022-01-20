@@ -1,0 +1,25 @@
+{
+    "type": "driving_licence",
+    "country": "CAN",
+    "size": "ID-1",
+    "has_nfc_chip": false,
+    "sides": [
+        {
+            "side": "front",
+            "features": [
+                {
+                    "name": "face"
+                }
+            ]
+        },
+        {
+            "side": "back",
+            "features": [
+                {
+                    "name": "barcode",
+                    "type": "barcode_type_pdf417"
+                }
+            ]
+        }
+    ]
+}

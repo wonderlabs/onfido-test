@@ -1,0 +1,72 @@
+[
+    {
+        "type": "passport",
+        "country": null,
+        "size": "ID-3",
+        "has_nfc_chip": true,
+        "sides": [
+            {
+                "side": "page",
+                "features": [
+                    {
+                        "name": "face"
+                    },
+                    {
+                        "name": "mrz",
+                        "type": "mrz_type_3"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "type": "driving_licence",
+        "country": "USA",
+        "size": "ID-1",
+        "has_nfc_chip": false,
+        "sides": [
+            {
+                "side": "front",
+                "features": [
+                    {
+                        "name": "face"
+                    }
+                ]
+            },
+            {
+                "side": "back",
+                "features": [
+                    {
+                        "name": "barcode",
+                        "type": "barcode_type_pdf417"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "type": "national_id",
+        "country": "NLD",
+        "size": "ID-1",
+        "has_nfc_chip": true,
+        "sides": [
+            {
+                "side": "front",
+                "features": [
+                    {
+                        "name": "face"
+                    }
+                ]
+            },
+            {
+                "side": "back",
+                "features": [
+                    {
+                        "name": "mrz",
+                        "type": "mrz_type_1"
+                    }
+                ]
+            }
+        ]
+    }
+]

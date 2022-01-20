@@ -1,0 +1,914 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.5 (swiftlang-1300.0.31.1 clang-1300.0.29.1)
+// swift-module-flags: -target arm64-apple-ios11.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name Onfido
+import AVFoundation
+import AVKit
+import AudioToolbox
+import CommonCrypto
+import CoreGraphics
+import CoreImage
+import CoreNFC
+import CryptoKit
+import Foundation
+import MobileCoreServices
+@_exported import Onfido
+import Swift
+import UIKit
+import Vision
+import _Concurrency
+public struct Address : Swift.Encodable {
+  public let flatNumber: Swift.String?
+  public let buildingNumber: Swift.String?
+  public let buildingName: Swift.String?
+  public let street: Swift.String
+  public let subStreet: Swift.String?
+  public let town: Swift.String
+  public let state: Swift.String?
+  public let postcode: Swift.String
+  public let country: Swift.String
+  public let startDate: Foundation.Date?
+  public let endDate: Foundation.Date?
+  public init(flatNumber: Swift.String? = nil, buildingNumber: Swift.String? = nil, buildingName: Swift.String? = nil, street: Swift.String, subStreet: Swift.String? = nil, town: Swift.String, state: Swift.String? = nil, postcode: Swift.String, country: Swift.String, startDate: Foundation.Date? = nil, endDate: Foundation.Date? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+}
+public struct AddressResult : Swift.Decodable, Swift.CustomStringConvertible {
+  public let flatNumber: Swift.String?
+  public let buildingNumber: Swift.String?
+  public let buildingName: Swift.String?
+  public let street: Swift.String?
+  public let subStreet: Swift.String?
+  public let town: Swift.String?
+  public let state: Swift.String?
+  public let postcode: Swift.String?
+  public let country: Swift.String?
+  public let startDate: Foundation.Date?
+  public let endDate: Foundation.Date?
+  public var description: Swift.String {
+    get
+  }
+  public init(from decoder: Swift.Decoder) throws
+}
+@_inheritsConvenienceInitializers @objc(ONAppearance) final public class Appearance : ObjectiveC.NSObject {
+  @objc final public var primaryColor: UIKit.UIColor
+  @objc final public var primaryTitleColor: UIKit.UIColor
+  @objc final public var primaryBackgroundPressedColor: UIKit.UIColor
+  @objc final public var secondaryBackgroundPressedColor: UIKit.UIColor
+  @objc final public var buttonCornerRadius: CoreGraphics.CGFloat
+  @objc final public var fontRegular: Swift.String?
+  @objc final public var fontBold: Swift.String?
+  @objc final public var supportDarkMode: Swift.Bool
+  @objc final public var bubbleErrorBackgroundColor: UIKit.UIColor
+  @objc final public var captureSuccessColors: Onfido.CaptureSuccessColors
+  @objc override dynamic public init()
+  @objc deinit
+}
+public struct Applicant : Swift.Encodable {
+  public static func new(title: Swift.String? = nil, firstName: Swift.String, lastName: Swift.String, middleName: Swift.String? = nil, email: Swift.String? = nil, gender: Onfido.Gender? = nil, dateOfBirth: Foundation.Date? = nil, telephone: Swift.String? = nil, mobile: Swift.String? = nil, country: Swift.String? = nil, mothersMaidenName: Swift.String? = nil, previousLastName: Swift.String? = nil, nationality: Swift.String? = nil, countryOfBirth: Swift.String? = nil, townOfBirth: Swift.String? = nil, idNumbers: [Onfido.IdNumber]? = nil, addresses: [Onfido.Address]? = nil) -> Onfido.Applicant
+  public let title: Swift.String?
+  public let firstName: Swift.String
+  public let lastName: Swift.String
+  public let middleName: Swift.String?
+  public let email: Swift.String?
+  public let gender: Onfido.Gender?
+  public let dateOfBirth: Foundation.Date?
+  public let telephone: Swift.String?
+  public let mobile: Swift.String?
+  public let country: Swift.String?
+  public let mothersMaidenName: Swift.String?
+  public let previousLastName: Swift.String?
+  public let nationality: Swift.String?
+  public let countryOfBirth: Swift.String?
+  public let townOfBirth: Swift.String?
+  public let idNumbers: [Onfido.IdNumber]?
+  public let addresses: [Onfido.Address]?
+  public func encode(to encoder: Swift.Encoder) throws
+}
+public struct ApplicantResult : Swift.Decodable, Swift.CustomStringConvertible {
+  public let id: Swift.String
+  public let createdAt: Foundation.Date
+  public let href: Swift.String
+  public let title: Swift.String?
+  public let firstName: Swift.String
+  public let lastName: Swift.String
+  public let middleName: Swift.String?
+  public let email: Swift.String?
+  public let gender: Swift.String?
+  public let dateOfBirth: Foundation.Date?
+  public let telephone: Swift.String?
+  public let mobile: Swift.String?
+  public let country: Swift.String?
+  public let idNumbers: [Onfido.IdNumberResult]?
+  public let addresses: [Onfido.AddressResult]?
+  public var description: Swift.String {
+    get
+  }
+  public init(from decoder: Swift.Decoder) throws
+}
+final public class Assembler {
+  final public var resolver: Onfido.Resolver {
+    get
+  }
+  public init(container: Onfido.Container? = Container())
+  public init(parentAssembler: Onfido.Assembler?)
+  @available(*, deprecated, message: "Use not throwing alternative: init(_:, container:)")
+  convenience public init(assemblies: [Onfido.Assembly], container: Onfido.Container? = Container()) throws
+  public init(_ assemblies: [Onfido.Assembly], container: Onfido.Container = Container())
+  @available(*, deprecated, message: "Use not throwing alternative: init(_:, parent:)")
+  convenience public init(assemblies: [Onfido.Assembly], parentAssembler: Onfido.Assembler?) throws
+  public init(_ assemblies: [Onfido.Assembly], parent: Onfido.Assembler?)
+  final public func apply(assembly: Onfido.Assembly)
+  final public func apply(assemblies: [Onfido.Assembly])
+  @objc deinit
+}
+public protocol Assembly {
+  func assemble(container: Onfido.Container)
+  func loaded(resolver: Onfido.Resolver)
+}
+extension Onfido.Assembly {
+  public func loaded(resolver: Onfido.Resolver)
+}
+@objc public protocol AutoCaptureConfig {
+  @objc var manualFallbackTimeInMilliseconds: Swift.Int { get }
+}
+public class DefaultAutoCaptureConfig : Onfido.AutoCaptureConfig {
+  public init()
+  @objc final public let manualFallbackTimeInMilliseconds: Swift.Int
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers public class BaseDocumentConfiguration : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public enum CancellationReason : Swift.Int {
+  case userExit, deniedConsent
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @objc(ONCaptureSuccessColors) final public class CaptureSuccessColors : ObjectiveC.NSObject {
+  @objc final public var borderColor: UIKit.UIColor
+  @objc final public var tickViewImageTintColor: UIKit.UIColor
+  @objc final public var tickViewBackgroundColor: UIKit.UIColor
+  @objc override dynamic public init()
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(ONCertificatePinningConfiguration) public class CertificatePinningConfiguration : ObjectiveC.NSObject {
+  @objc final public let hashes: [Swift.String]
+  @objc public init(hashes: [Swift.String]) throws
+  @objc deinit
+}
+@objc(ONCobrandingConfig) public class CobrandingConfig : ObjectiveC.NSObject {
+  public init(cobrandingText: Swift.String?, cobrandingLogoLightMode: UIKit.UIImage?, cobrandingLogoDarkMode: UIKit.UIImage?)
+  @objc deinit
+}
+extension Onfido.Container {
+  @discardableResult
+  final public func register<Service, Arg1>(_ serviceType: Service.Type, name: Swift.String? = nil, factory: @escaping (Onfido.Resolver, Arg1) -> Service) -> Onfido.ServiceEntry<Service>
+  @discardableResult
+  final public func register<Service, Arg1, Arg2>(_ serviceType: Service.Type, name: Swift.String? = nil, factory: @escaping (Onfido.Resolver, Arg1, Arg2) -> Service) -> Onfido.ServiceEntry<Service>
+  @discardableResult
+  final public func register<Service, Arg1, Arg2, Arg3>(_ serviceType: Service.Type, name: Swift.String? = nil, factory: @escaping (Onfido.Resolver, Arg1, Arg2, Arg3) -> Service) -> Onfido.ServiceEntry<Service>
+  @discardableResult
+  final public func register<Service, Arg1, Arg2, Arg3, Arg4>(_ serviceType: Service.Type, name: Swift.String? = nil, factory: @escaping (Onfido.Resolver, Arg1, Arg2, Arg3, Arg4) -> Service) -> Onfido.ServiceEntry<Service>
+  @discardableResult
+  final public func register<Service, Arg1, Arg2, Arg3, Arg4, Arg5>(_ serviceType: Service.Type, name: Swift.String? = nil, factory: @escaping (Onfido.Resolver, Arg1, Arg2, Arg3, Arg4, Arg5) -> Service) -> Onfido.ServiceEntry<Service>
+  @discardableResult
+  final public func register<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>(_ serviceType: Service.Type, name: Swift.String? = nil, factory: @escaping (Onfido.Resolver, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6) -> Service) -> Onfido.ServiceEntry<Service>
+  @discardableResult
+  final public func register<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7>(_ serviceType: Service.Type, name: Swift.String? = nil, factory: @escaping (Onfido.Resolver, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7) -> Service) -> Onfido.ServiceEntry<Service>
+  @discardableResult
+  final public func register<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8>(_ serviceType: Service.Type, name: Swift.String? = nil, factory: @escaping (Onfido.Resolver, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8) -> Service) -> Onfido.ServiceEntry<Service>
+  @discardableResult
+  final public func register<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Arg9>(_ serviceType: Service.Type, name: Swift.String? = nil, factory: @escaping (Onfido.Resolver, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Arg9) -> Service) -> Onfido.ServiceEntry<Service>
+}
+extension Onfido.Container {
+  final public func resolve<Service, Arg1>(_ serviceType: Service.Type, argument: Arg1) -> Service?
+  final public func resolve<Service, Arg1>(_ serviceType: Service.Type, name: Swift.String?, argument: Arg1) -> Service?
+  final public func resolve<Service, Arg1, Arg2>(_ serviceType: Service.Type, arguments arg1: Arg1, _ arg2: Arg2) -> Service?
+  final public func resolve<Service, Arg1, Arg2>(_ serviceType: Service.Type, name: Swift.String?, arguments arg1: Arg1, _ arg2: Arg2) -> Service?
+  final public func resolve<Service, Arg1, Arg2, Arg3>(_ serviceType: Service.Type, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3) -> Service?
+  final public func resolve<Service, Arg1, Arg2, Arg3>(_ serviceType: Service.Type, name: Swift.String?, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3) -> Service?
+  final public func resolve<Service, Arg1, Arg2, Arg3, Arg4>(_ serviceType: Service.Type, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4) -> Service?
+  final public func resolve<Service, Arg1, Arg2, Arg3, Arg4>(_ serviceType: Service.Type, name: Swift.String?, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4) -> Service?
+  final public func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5>(_ serviceType: Service.Type, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5) -> Service?
+  final public func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5>(_ serviceType: Service.Type, name: Swift.String?, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5) -> Service?
+  final public func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>(_ serviceType: Service.Type, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5, _ arg6: Arg6) -> Service?
+  final public func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>(_ serviceType: Service.Type, name: Swift.String?, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5, _ arg6: Arg6) -> Service?
+  final public func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7>(_ serviceType: Service.Type, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5, _ arg6: Arg6, _ arg7: Arg7) -> Service?
+  final public func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7>(_ serviceType: Service.Type, name: Swift.String?, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5, _ arg6: Arg6, _ arg7: Arg7) -> Service?
+  final public func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8>(_ serviceType: Service.Type, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5, _ arg6: Arg6, _ arg7: Arg7, _ arg8: Arg8) -> Service?
+  final public func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8>(_ serviceType: Service.Type, name: Swift.String?, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5, _ arg6: Arg6, _ arg7: Arg7, _ arg8: Arg8) -> Service?
+  final public func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Arg9>(_ serviceType: Service.Type, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5, _ arg6: Arg6, _ arg7: Arg7, _ arg8: Arg8, _ arg9: Arg9) -> Service?
+  final public func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Arg9>(_ serviceType: Service.Type, name: Swift.String?, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5, _ arg6: Arg6, _ arg7: Arg7, _ arg8: Arg8, _ arg9: Arg9) -> Service?
+}
+public typealias LoggingFunctionType = (Swift.String) -> Swift.Void
+extension Onfido.Container {
+  public static var loggingFunction: Onfido.LoggingFunctionType? {
+    get
+    set
+  }
+}
+@_hasMissingDesignatedInitializers final public class Container {
+  convenience public init(parent: Onfido.Container? = nil)
+  convenience public init(parent: Onfido.Container? = nil, registeringClosure: (Onfido.Container) -> Swift.Void)
+  final public func removeAll()
+  final public func resetObjectScope(_ objectScope: Onfido.ObjectScopeProtocol)
+  final public func resetObjectScope(_ objectScope: Onfido.ObjectScope)
+  @discardableResult
+  final public func register<Service>(_ serviceType: Service.Type, name: Swift.String? = nil, factory: @escaping (Onfido.Resolver) -> Service) -> Onfido.ServiceEntry<Service>
+  @discardableResult
+  final public func _register<Service, Factory>(_ serviceType: Service.Type, factory: Factory, name: Swift.String? = nil, option: Onfido.ServiceKeyOption? = nil) -> Onfido.ServiceEntry<Service>
+  final public func synchronize() -> Onfido.Resolver
+  @objc deinit
+}
+extension Onfido.Container : Onfido._Resolver {
+  final public func _resolve<Service, Factory>(name: Swift.String?, option: Onfido.ServiceKeyOption? = nil, invoker: (Factory) -> Service) -> Service?
+}
+extension Onfido.Container : Onfido.Resolver {
+  final public func resolve<Service>(_ serviceType: Service.Type) -> Service?
+  final public func resolve<Service>(_ serviceType: Service.Type, name: Swift.String?) -> Service?
+}
+extension Onfido.Container : Swift.CustomStringConvertible {
+  final public var description: Swift.String {
+    get
+  }
+}
+public struct GlareValidationResult {
+  public let hasGlare: Swift.Bool
+}
+public struct BlurValidationResult {
+  public let hasBlur: Swift.Bool
+}
+public struct DetectedEdges {
+}
+public struct EdgeDetectionResult {
+  public let detectedEdges: Onfido.DetectedEdges
+}
+public struct BarcodeValidationResult {
+  public let detectedBarcode: Swift.Bool
+  public let barcodePayload: Swift.String?
+}
+public struct MRZDetectionResult {
+  public let detectedMRZ: Swift.Bool
+}
+public struct MRZExtractionResult {
+  public let mrzInfo: Swift.String
+}
+public struct FaceDetectionResult {
+  public let detectedFace: Swift.Bool
+}
+public struct DocumentAnalysisResults {
+  public let glareResult: Onfido.GlareValidationResult?
+  public let faceDetectionResult: Onfido.FaceDetectionResult?
+  public let mrzExtractionResult: Onfido.MRZExtractionResult?
+  public let mrzDetectionResult: Onfido.MRZDetectionResult?
+  public let barcodeValidationResult: Onfido.BarcodeValidationResult?
+  public let edgeDetectionResult: Onfido.EdgeDetectionResult?
+  public let blurValidationResult: Onfido.BlurValidationResult?
+}
+public protocol DocumentCaptureDelegate : AnyObject {
+  func errorOccured(error: Onfido.OnfidoComponentError)
+  func didAnalyseFrame(results: Onfido.DocumentAnalysisResults)
+  func didTakePicture(capturedData: Onfido.CaptureData)
+}
+public struct CaptureData {
+  public let width: Swift.Int
+  public let height: Swift.Int
+  public let analysisResults: Onfido.DocumentAnalysisResults
+  public let capture: Foundation.Data
+}
+public enum OnfidoComponentError : Swift.Error {
+  case unknown(Swift.String)
+  case cameraAccess
+  case permission
+  case failedToProcessFrame
+}
+@_hasMissingDesignatedInitializers public class DocumentCaptureOptions {
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers public class DocumentCaptureOptionsBuilder : ObjectiveC.NSObject {
+  @discardableResult
+  public func withCountryCode(_ countryCode: Swift.String) -> Onfido.DocumentCaptureOptionsBuilder
+  @discardableResult
+  @objc public func withFormat(_ format: Onfido.DocumentFormat) -> Onfido.DocumentCaptureOptionsBuilder
+  @discardableResult
+  @objc public func withAutoCapture(_ config: Onfido.AutoCaptureConfig) -> Onfido.DocumentCaptureOptionsBuilder
+  @discardableResult
+  public func withDocumentTypeAndSide(_ documentTypeAndSide: Onfido.DocumentTypeAndSide) -> Onfido.DocumentCaptureOptionsBuilder
+  public func build() throws -> Onfido.DocumentCaptureOptions
+  @objc override dynamic public init()
+  @objc deinit
+}
+public protocol CaptureProtocol : AnyObject {
+  func start()
+  func stop()
+  func takePicture()
+}
+public protocol DocumentCaptureProtocol : Onfido.CaptureProtocol {
+  var delegate: Onfido.DocumentCaptureDelegate? { get set }
+}
+@objc public enum DocumentFormat : Swift.Int {
+  case card
+  case folded
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objc(ONDocumentResult) public class DocumentResult : ObjectiveC.NSObject {
+  @objc(front) final public let front: Onfido.DocumentSideResult
+  @objc(back) final public let back: Onfido.DocumentSideResult?
+  @objc(typeSelected) final public let typeSelected: Swift.String
+  @objc(countrySelected) final public let countrySelected: Swift.String?
+  @objc(nfcMediaId) final public let nfcMediaId: Swift.String?
+  @objc override dynamic public var description: Swift.String {
+    @objc get
+  }
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc(ONDocumentSideResult) public class DocumentSideResult : ObjectiveC.NSObject {
+  @objc(id) final public let id: Swift.String
+  @objc deinit
+}
+public enum DocumentSide : Swift.String, Swift.Equatable {
+  case front
+  case back
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public func == (lhs: Onfido.DocumentSide, rhs: Onfido.DocumentSide) -> Swift.Bool
+@objc public enum DocumentStepVariant : Swift.Int, Swift.Equatable {
+  case video
+  case photo
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum DocumentType : Swift.Equatable, Swift.Hashable {
+  case passport(config: Onfido.PassportConfiguration?)
+  case drivingLicence(config: Onfido.DrivingLicenceConfiguration?)
+  case nationalIdentityCard(config: Onfido.NationalIdentityConfiguration?)
+  case residencePermit(config: Onfido.ResidencePermitConfiguration?)
+  case visa(config: Onfido.VisaConfiguration?)
+  case workPermit(config: Onfido.WorkPermitConfiguration?)
+  case generic(config: Onfido.GenericDocumentConfiguration?)
+  public static func == (lhs: Onfido.DocumentType, rhs: Onfido.DocumentType) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum DocumentTypeAndSide : Swift.Hashable {
+  case passport(config: Onfido.PassportConfiguration?)
+  case visa(config: Onfido.VisaConfiguration?)
+  case workPermit(side: Onfido.DocumentSide, config: Onfido.WorkPermitConfiguration?)
+  case drivingLicence(side: Onfido.DocumentSide, config: Onfido.DrivingLicenceConfiguration?)
+  case nationalIdentityCard(side: Onfido.DocumentSide, config: Onfido.NationalIdentityConfiguration?)
+  case residencePermit(side: Onfido.DocumentSide, config: Onfido.ResidencePermitConfiguration?)
+  case generic(side: Onfido.DocumentSide, config: Onfido.GenericDocumentConfiguration?)
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (lhs: Onfido.DocumentTypeAndSide, rhs: Onfido.DocumentTypeAndSide) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@objc(DrivingLicenceConfiguration) public class DrivingLicenceConfiguration : Onfido.BaseDocumentConfiguration {
+  @objc public init(documentFormat: Onfido.DocumentFormat, country: Swift.String? = nil)
+  @objc public init(country: Swift.String)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc(ONEnterpriseFeatures) final public class EnterpriseFeatures : ObjectiveC.NSObject {
+  @objc override final public func isEqual(_ object: Any?) -> Swift.Bool
+  @objc public static func builder() -> Onfido.EnterpriseFeatures.Builder
+  @_inheritsConvenienceInitializers @objc(ONEnterpriseFeaturesBuilder) final public class Builder : ObjectiveC.NSObject {
+    @discardableResult
+    @objc final public func withHideOnfidoLogo(_ hideOnfidoLogo: Swift.Bool) -> Onfido.EnterpriseFeatures.Builder
+    @discardableResult
+    @objc final public func withCobrandingText(_ cobrandingText: Swift.String) -> Onfido.EnterpriseFeatures.Builder
+    @discardableResult
+    @objc final public func withCobrandingLogo(_ cobrandingLogoLightMode: UIKit.UIImage, cobrandingLogoDarkMode: UIKit.UIImage) -> Onfido.EnterpriseFeatures.Builder
+    @discardableResult
+    @objc final public func withDisableMobileSdkAnalytics(_ disableMobileSdkAnalytics: Swift.Bool) -> Onfido.EnterpriseFeatures.Builder
+    @objc final public func build() -> Onfido.EnterpriseFeatures
+    @objc override dynamic public init()
+    @objc deinit
+  }
+  @objc deinit
+}
+@objc(FaceResultVariant) public enum FaceResultVariant : Swift.Int {
+  case photo, video
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objc(ONFaceResult) public class FaceResult : ObjectiveC.NSObject {
+  @objc(id) final public let id: Swift.String
+  @objc(variant) final public let variant: Onfido.FaceResultVariant
+  @objc override dynamic public var description: Swift.String {
+    @objc get
+  }
+  @objc deinit
+}
+public enum FaceStepVariant : Swift.Equatable {
+  case video(withConfiguration: Onfido.VideoStepConfiguration?)
+  case photo(withConfiguration: Onfido.PhotoStepConfiguration?)
+  public static func == (lhs: Onfido.FaceStepVariant, rhs: Onfido.FaceStepVariant) -> Swift.Bool
+}
+public enum Gender : Swift.String {
+  case male
+  case female
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+@objc(GenericDocumentConfiguration) public class GenericDocumentConfiguration : Onfido.BaseDocumentConfiguration {
+  public init(country: Swift.String)
+  @objc deinit
+}
+public enum IdNumberType : Swift.String, Swift.Encodable {
+  case ssn
+  case taxId
+  case identityCard
+  case drivingLicense
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public struct IdNumber : Swift.Encodable {
+  public let type: Onfido.IdNumberType
+  public let value: Swift.String
+  public let stateCode: Swift.String
+  public init(type: Onfido.IdNumberType, value: Swift.String, stateCode: Swift.String)
+  public func encode(to encoder: Swift.Encoder) throws
+}
+public struct IdNumberResult : Swift.Decodable, Swift.CustomStringConvertible {
+  public let type: Swift.String?
+  public let value: Swift.String?
+  public let stateCode: Swift.String?
+  public var description: Swift.String {
+    get
+  }
+  public init(from decoder: Swift.Decoder) throws
+}
+public protocol InstanceStorage : AnyObject {
+  var instance: Any? { get set }
+}
+final public class PermanentStorage : Onfido.InstanceStorage {
+  final public var instance: Any?
+  public init()
+  @objc deinit
+}
+final public class TransientStorage : Onfido.InstanceStorage {
+  final public var instance: Any? {
+    get
+    set
+  }
+  public init()
+  @objc deinit
+}
+final public class WeakStorage : Onfido.InstanceStorage {
+  final public var instance: Any? {
+    get
+    set
+  }
+  public init()
+  @objc deinit
+}
+public func toAsn1Length(_ data: Swift.Int) throws -> [Swift.UInt8]
+@objc(NationalIdentityConfiguration) public class NationalIdentityConfiguration : Onfido.BaseDocumentConfiguration {
+  @objc public init(documentFormat: Onfido.DocumentFormat, country: Swift.String?)
+  @objc public init(country: Swift.String)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc(ONAddressResult) final public class ONAddressResult : ObjectiveC.NSObject {
+  @objc(flatNumber) final public var flatNumber: Swift.String? {
+    @objc get
+  }
+  @objc(buildingNumber) final public var buildingNumber: Swift.String? {
+    @objc get
+  }
+  @objc(buildingName) final public var buildingName: Swift.String? {
+    @objc get
+  }
+  @objc(street) final public var street: Swift.String? {
+    @objc get
+  }
+  @objc(subStreet) final public var subStreet: Swift.String? {
+    @objc get
+  }
+  @objc(town) final public var town: Swift.String? {
+    @objc get
+  }
+  @objc(state) final public var state: Swift.String? {
+    @objc get
+  }
+  @objc(postcode) final public var postcode: Swift.String? {
+    @objc get
+  }
+  @objc(country) final public var country: Swift.String? {
+    @objc get
+  }
+  @objc(startDate) final public var startDate: Foundation.Date? {
+    @objc get
+  }
+  @objc(endDate) final public var endDate: Foundation.Date? {
+    @objc get
+  }
+  @objc override final public var description: Swift.String {
+    @objc get
+  }
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc(ONDocumentTypeVariantConfig) public class DocumentTypeVariantConfig : ObjectiveC.NSObject {
+  @objc public static func builder() -> Onfido.DocumentTypeVariantConfig.DocumentConfigBuilder
+  @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc final public class DocumentConfigBuilder : ObjectiveC.NSObject {
+    @discardableResult
+    @objc final public func withPassport(config: Onfido.PassportConfiguration? = nil) -> Onfido.DocumentTypeVariantConfig.DocumentConfigBuilder
+    @discardableResult
+    @objc final public func withDrivingLicence(config: Onfido.DrivingLicenceConfiguration? = nil) -> Onfido.DocumentTypeVariantConfig.DocumentConfigBuilder
+    @discardableResult
+    @objc final public func withNationalIdentityCard(config: Onfido.NationalIdentityConfiguration? = nil) -> Onfido.DocumentTypeVariantConfig.DocumentConfigBuilder
+    @discardableResult
+    @objc final public func withResidencePermit(config: Onfido.ResidencePermitConfiguration? = nil) -> Onfido.DocumentTypeVariantConfig.DocumentConfigBuilder
+    @discardableResult
+    @objc final public func withVisa(config: Onfido.VisaConfiguration? = nil) -> Onfido.DocumentTypeVariantConfig.DocumentConfigBuilder
+    @discardableResult
+    @objc final public func withWorkPermit(config: Onfido.WorkPermitConfiguration? = nil) -> Onfido.DocumentTypeVariantConfig.DocumentConfigBuilder
+    @discardableResult
+    @objc final public func withGeneric(config: Onfido.GenericDocumentConfiguration? = nil) -> Onfido.DocumentTypeVariantConfig.DocumentConfigBuilder
+    @discardableResult
+    @objc final public func withVariant(variant: Onfido.DocumentStepVariant) -> Onfido.DocumentTypeVariantConfig.DocumentConfigBuilder
+    @objc final public func build() throws -> Onfido.DocumentTypeVariantConfig
+    @objc deinit
+  }
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc(ONFaceStepVariantConfig) public class FaceStepVariantConfig : ObjectiveC.NSObject {
+  @objc public static func builder() -> Onfido.FaceStepVariantConfig.Builder
+  @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc final public class Builder : ObjectiveC.NSObject {
+    @discardableResult
+    @objc final public func withVideoCapture(config: Onfido.VideoStepConfiguration? = nil) -> Onfido.FaceStepVariantConfig.Builder
+    @discardableResult
+    @objc final public func withPhotoCapture(config: Onfido.PhotoStepConfiguration? = nil) -> Onfido.FaceStepVariantConfig.Builder
+    @objc final public func build() throws -> Onfido.FaceStepVariantConfig
+    @objc deinit
+  }
+  @objc deinit
+}
+@objc(ONFlow) final public class ONFlow : ObjectiveC.NSObject {
+  @objc public init(withFlowConfiguration flowConfiguration: Onfido.ONFlowConfig)
+  @objc final public func run() throws -> UIKit.UIViewController
+  @discardableResult
+  @objc final public func with(responseHandler: @escaping (Onfido.ONFlowResponse) -> Swift.Void) -> Onfido.ONFlow
+  @discardableResult
+  @objc final public func with(responseHandler: @escaping (Onfido.ONFlowResponse) -> Swift.Void, dismissFlowOnCompletion: Swift.Bool) -> Onfido.ONFlow
+  @discardableResult
+  @objc final public func with(eventHandler: @escaping (Onfido.Event) -> Swift.Void) -> Onfido.ONFlow
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc(ONFlowConfig) final public class ONFlowConfig : ObjectiveC.NSObject {
+  @objc(builder) public static func builder() -> Onfido.ONFlowConfigBuilder
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(ONFlowConfigBuilder) final public class ONFlowConfigBuilder : ObjectiveC.NSObject {
+  @objc final public func with(sdkToken: Swift.String)
+  @objc final public func with(sdkToken: Swift.String, expireHandler: @escaping Onfido.SDKTokenExpirationHandler)
+  @objc final public func withWelcomeStep()
+  @objc final public func withConsentStep()
+  @objc final public func withDocumentStep()
+  @objc final public func withDocumentStep(variant: Onfido.DocumentStepVariant)
+  @objc final public func withDocumentStep(ofType variant: Onfido.DocumentTypeVariantConfig)
+  @objc final public func withFaceStep(ofVariant variant: Onfido.FaceStepVariantConfig)
+  @objc final public func withCustomLocalization()
+  @objc final public func withCustomLocalization(withTableName tableName: Swift.String)
+  @objc final public func withCustomLocalization(withTableName tableName: Swift.String, in bundle: Foundation.Bundle)
+  @objc final public func withAppearance(_ appearance: Onfido.Appearance)
+  @objc final public func withEnterpriseFeatures(_ enterpriseFeatures: Onfido.EnterpriseFeatures)
+  @objc final public func withCertificatePinningConfiguration(_ configuration: Onfido.CertificatePinningConfiguration)
+  @objc final public func withNFCReadBetaFeatureEnabled()
+  @objc final public func withCanadianDrivingLicenceAutoCaptureBetaFeatureEnabled()
+  @objc final public func build() throws -> Onfido.ONFlowConfig
+  @objc deinit
+}
+@objc(ONFlowConfigError) public enum ONFlowConfigError : Swift.Int {
+  case missingSDKToken
+  case invalidSDKToken
+  case missingSteps
+  case invalidDocumentFormatAndCountryCombination
+  case invalidCountryCode
+  case enterpriseFeaturesNotAuthorized
+  case selectedEnterpriseFeatureNotAuthorized
+  case enterpriseFeatureProvidedWithMobileToken
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc(ONFlowError) public enum ONFlowError : Swift.Int {
+  case cameraPermission
+  case microphonePermission
+  case upload
+  case exception
+  case failedToWriteToDisk
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @objc(ONFlowResponse) public class ONFlowResponse : ObjectiveC.NSObject {
+  @objc public var results: [Onfido.ONFlowResult]?
+  @objc public var error: Foundation.NSError?
+  @objc public var userCanceled: Onfido.ONFlowCancellation?
+  @objc override dynamic public init()
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc(ONFlowCancellation) public class ONFlowCancellation : ObjectiveC.NSObject {
+  @objc final public let reason: Onfido.CancellationReason
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc(ONFlowResult) public class ONFlowResult : ObjectiveC.NSObject {
+  @objc final public let type: Onfido.ONFlowResultType
+  @objc public var result: Swift.AnyObject
+  @objc deinit
+}
+@objc(ONFlowResultType) public enum ONFlowResultType : Swift.Int {
+  case document
+  case face
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objc(ONIdNumberResult) final public class ONIdNumberResult : ObjectiveC.NSObject {
+  @objc(type) final public var type: Swift.String? {
+    @objc get
+  }
+  @objc(value) final public var value: Swift.String? {
+    @objc get
+  }
+  @objc(stateCode) final public var stateCode: Swift.String? {
+    @objc get
+  }
+  @objc override final public var description: Swift.String {
+    @objc get
+  }
+  @objc deinit
+}
+extension Onfido.ObjectScope {
+  public static let transient: Onfido.ObjectScope
+  public static let graph: Onfido.ObjectScope
+  public static let container: Onfido.ObjectScope
+  public static let weak: Onfido.ObjectScope
+}
+public protocol ObjectScopeProtocol : AnyObject {
+  func makeStorage() -> Onfido.InstanceStorage
+}
+public class ObjectScope : Onfido.ObjectScopeProtocol, Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+  public init(storageFactory: @escaping () -> Onfido.InstanceStorage, description: Swift.String = "")
+  public func makeStorage() -> Onfido.InstanceStorage
+  @objc deinit
+}
+extension Onfido.OnfidoApiError : Swift.Equatable {
+  public static func == (lhs: Onfido.OnfidoApiError, rhs: Onfido.OnfidoApiError) -> Swift.Bool
+}
+public struct OnfidoApiError : Swift.Decodable, Swift.CustomStringConvertible {
+  public let id: Swift.String?
+  public let type: Swift.String
+  public let message: Swift.String
+  public let fields: Swift.String?
+  public init(from decoder: Swift.Decoder) throws
+  public var description: Swift.String {
+    get
+  }
+}
+extension Onfido.OnfidoConfig {
+  public static func builder() -> Onfido.OnfidoConfigBuilder
+}
+public struct OnfidoConfig {
+}
+@_hasMissingDesignatedInitializers final public class OnfidoConfigBuilder {
+  @discardableResult
+  final public func withSDKToken(_ token: Swift.String, expireHandler: Onfido.SDKTokenExpirationHandler? = nil) -> Onfido.OnfidoConfigBuilder
+  @discardableResult
+  final public func withWelcomeStep() -> Onfido.OnfidoConfigBuilder
+  @discardableResult
+  final public func withUserConsentStep() -> Onfido.OnfidoConfigBuilder
+  @discardableResult
+  final public func withDocumentStep(variant: Onfido.DocumentStepVariant = .photo) -> Onfido.OnfidoConfigBuilder
+  @discardableResult
+  final public func withDocumentStep(ofType type: Onfido.DocumentType, variant: Onfido.DocumentStepVariant = .photo) -> Onfido.OnfidoConfigBuilder
+  @discardableResult
+  final public func withFaceStep(ofVariant variant: Onfido.FaceStepVariant) -> Onfido.OnfidoConfigBuilder
+  @discardableResult
+  final public func withCustomLocalization(andTableName tableName: Swift.String = "Localizable", in bundle: Foundation.Bundle = Bundle.main) -> Onfido.OnfidoConfigBuilder
+  @discardableResult
+  final public func withAppearance(_ appearance: Onfido.Appearance) -> Onfido.OnfidoConfigBuilder
+  @discardableResult
+  final public func withCertificatePinning(_ configuration: Onfido.CertificatePinningConfiguration) -> Onfido.OnfidoConfigBuilder
+  @discardableResult
+  final public func withEnterpriseFeatures(_ enterpriseFeatures: Onfido.EnterpriseFeatures) -> Onfido.OnfidoConfigBuilder
+  @discardableResult
+  final public func withNFCReadBetaFeatureEnabled() -> Onfido.OnfidoConfigBuilder
+  @discardableResult
+  final public func withCanadianDrivingLicenceAutoCaptureBetaFeatureEnabled() -> Onfido.OnfidoConfigBuilder
+  final public func build() throws -> Onfido.OnfidoConfig
+  @objc deinit
+}
+public enum OnfidoConfigError : Swift.Error {
+  case missingSDKToken
+  case invalidSDKToken
+  case missingSteps
+  case invalidDocumentFormatAndCountryCombination
+  case invalidCountryCode
+  case enterpriseFeaturesNotAuthorized
+  case selectedEnterpriseFeatureNotAuthorized
+  public static func == (a: Onfido.OnfidoConfigError, b: Onfido.OnfidoConfigError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objc public class Event : ObjectiveC.NSObject {
+  @objc final public let name: Swift.String
+  @objc final public let properties: [Swift.String : Any]
+  @objc override dynamic public var description: Swift.String {
+    @objc get
+  }
+  @objc deinit
+}
+public class OnfidoFlow {
+  public typealias ResponseHandler = (Onfido.OnfidoResponse) -> Swift.Void
+  public typealias EventHandler = (Onfido.Event) -> Swift.Void
+  public init(withConfiguration config: Onfido.OnfidoConfig)
+  @discardableResult
+  public func with(responseHandler: @escaping Onfido.OnfidoFlow.ResponseHandler, dismissFlowOnCompletion: Swift.Bool = true) -> Onfido.OnfidoFlow
+  @discardableResult
+  public func with(eventHandler: @escaping Onfido.OnfidoFlow.EventHandler) -> Onfido.OnfidoFlow
+  public func run() throws -> UIKit.UIViewController
+  @objc deinit
+}
+public enum OnfidoFlowError : Swift.Error, Swift.Equatable {
+  case cameraPermission
+  case microphonePermission
+  case upload(Onfido.OnfidoApiError)
+  case exception(withError: Swift.Error?, withMessage: Swift.String?)
+  case failedToWriteToDisk
+  public static func == (lhs: Onfido.OnfidoFlowError, rhs: Onfido.OnfidoFlowError) -> Swift.Bool
+}
+public enum OnfidoResponse {
+  case success([Onfido.OnfidoResult])
+  case cancel(Onfido.CancellationReason)
+  case error(Swift.Error)
+}
+public enum OnfidoResult {
+  case document(Onfido.DocumentResult)
+  case face(Onfido.FaceResult)
+  public var debugString: Swift.String {
+    get
+  }
+}
+public func == (lhs: Onfido.OnfidoResult, rhs: Onfido.OnfidoResult) -> Swift.Bool
+public class OrchestrationConfig {
+  public var appearance: Onfido.Appearance
+  public var localisation: (bundle: Foundation.Bundle, tableName: Swift.String)?
+  public init(workflowRunId: Swift.String, sdkToken: Swift.String)
+  @objc deinit
+}
+public class OverlayStyle {
+  final public let foregroundColor: UIKit.UIColor
+  final public let overlayAlpha: CoreGraphics.CGFloat
+  final public let cornerRadius: CoreGraphics.CGFloat
+  public init()
+  public init(foregroundColor: UIKit.UIColor, cornerRadius: CoreGraphics.CGFloat)
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @objc(PassportConfiguration) public class PassportConfiguration : Onfido.BaseDocumentConfiguration {
+  @objc override dynamic public init()
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @objc(PhotoStepConfiguration) public class PhotoStepConfiguration : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  @objc public init(showSelfieIntroScreen: Swift.Bool)
+  public static func == (lhs: Onfido.PhotoStepConfiguration, rhs: Onfido.PhotoStepConfiguration) -> Swift.Bool
+  @objc deinit
+}
+@objc(ResidencePermitConfiguration) public class ResidencePermitConfiguration : Onfido.BaseDocumentConfiguration {
+  @objc public init(country: Swift.String)
+  @objc deinit
+}
+public protocol Resolver {
+  func resolve<Service>(_ serviceType: Service.Type) -> Service?
+  func resolve<Service>(_ serviceType: Service.Type, name: Swift.String?) -> Service?
+  func resolve<Service, Arg1>(_ serviceType: Service.Type, argument: Arg1) -> Service?
+  func resolve<Service, Arg1>(_ serviceType: Service.Type, name: Swift.String?, argument: Arg1) -> Service?
+  func resolve<Service, Arg1, Arg2>(_ serviceType: Service.Type, arguments arg1: Arg1, _ arg2: Arg2) -> Service?
+  func resolve<Service, Arg1, Arg2>(_ serviceType: Service.Type, name: Swift.String?, arguments arg1: Arg1, _ arg2: Arg2) -> Service?
+  func resolve<Service, Arg1, Arg2, Arg3>(_ serviceType: Service.Type, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3) -> Service?
+  func resolve<Service, Arg1, Arg2, Arg3>(_ serviceType: Service.Type, name: Swift.String?, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3) -> Service?
+  func resolve<Service, Arg1, Arg2, Arg3, Arg4>(_ serviceType: Service.Type, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4) -> Service?
+  func resolve<Service, Arg1, Arg2, Arg3, Arg4>(_ serviceType: Service.Type, name: Swift.String?, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4) -> Service?
+  func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5>(_ serviceType: Service.Type, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5) -> Service?
+  func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5>(_ serviceType: Service.Type, name: Swift.String?, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5) -> Service?
+  func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>(_ serviceType: Service.Type, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5, _ arg6: Arg6) -> Service?
+  func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>(_ serviceType: Service.Type, name: Swift.String?, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5, _ arg6: Arg6) -> Service?
+  func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7>(_ serviceType: Service.Type, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5, _ arg6: Arg6, _ arg7: Arg7) -> Service?
+  func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7>(_ serviceType: Service.Type, name: Swift.String?, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5, _ arg6: Arg6, _ arg7: Arg7) -> Service?
+  func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8>(_ serviceType: Service.Type, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5, _ arg6: Arg6, _ arg7: Arg7, _ arg8: Arg8) -> Service?
+  func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8>(_ serviceType: Service.Type, name: Swift.String?, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5, _ arg6: Arg6, _ arg7: Arg7, _ arg8: Arg8) -> Service?
+  func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Arg9>(_ serviceType: Service.Type, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5, _ arg6: Arg6, _ arg7: Arg7, _ arg8: Arg8, _ arg9: Arg9) -> Service?
+  func resolve<Service, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Arg9>(_ serviceType: Service.Type, name: Swift.String?, arguments arg1: Arg1, _ arg2: Arg2, _ arg3: Arg3, _ arg4: Arg4, _ arg5: Arg5, _ arg6: Arg6, _ arg7: Arg7, _ arg8: Arg8, _ arg9: Arg9) -> Service?
+}
+public typealias SDKTokenExpirationHandler = ((@escaping (Swift.String) -> Swift.Void) -> Swift.Void)
+@_hasMissingDesignatedInitializers final public class ServiceEntry<Service> {
+  @discardableResult
+  final public func inObjectScope(_ objectScope: Onfido.ObjectScopeProtocol) -> Self
+  @discardableResult
+  final public func inObjectScope(_ objectScope: Onfido.ObjectScope) -> Self
+  @discardableResult
+  final public func initCompleted(_ completed: @escaping (Onfido.Resolver, Service) -> Swift.Void) -> Self
+  @objc deinit
+}
+public protocol ServiceKeyOption : Swift.CustomStringConvertible {
+  func isEqualTo(_ another: Onfido.ServiceKeyOption) -> Swift.Bool
+  var hashValue: Swift.Int { get }
+}
+extension Onfido.ObjectScope {
+  @available(*, unavailable, renamed: "transient")
+  public static let none: Onfido.ObjectScope
+  @available(*, unavailable, renamed: "container")
+  public static let hierarchy: Onfido.ObjectScope
+}
+@available(*, unavailable, renamed: "Resolver")
+public protocol ResolverType {
+}
+@available(*, unavailable, renamed: "Assembly")
+public protocol AssemblyType {
+}
+@available(*, unavailable, renamed: "ServiceKeyOption")
+public protocol ServiceKeyOptionType {
+}
+@objc(VideoStepConfiguration) public class VideoStepConfiguration : ObjectiveC.NSObject {
+  @objc public init(showIntroVideo: Swift.Bool, manualLivenessCapture: Swift.Bool)
+  @objc deinit
+}
+@objc(VisaConfiguration) public class VisaConfiguration : Onfido.BaseDocumentConfiguration {
+  @objc public init(country: Swift.String)
+  @objc deinit
+}
+@objc(WorkPermitConfiguration) public class WorkPermitConfiguration : Onfido.BaseDocumentConfiguration {
+  @objc public init(country: Swift.String)
+  @objc deinit
+}
+public protocol _Resolver {
+  func _resolve<Service, Factory>(name: Swift.String?, option: Onfido.ServiceKeyOption?, invoker: (Factory) -> Service) -> Service?
+}
+extension Onfido.CancellationReason : Swift.Equatable {}
+extension Onfido.CancellationReason : Swift.Hashable {}
+extension Onfido.CancellationReason : Swift.RawRepresentable {}
+extension Onfido.DocumentFormat : Swift.Equatable {}
+extension Onfido.DocumentFormat : Swift.Hashable {}
+extension Onfido.DocumentFormat : Swift.RawRepresentable {}
+extension Onfido.DocumentSide : Swift.Hashable {}
+extension Onfido.DocumentSide : Swift.RawRepresentable {}
+extension Onfido.DocumentStepVariant : Swift.Hashable {}
+extension Onfido.DocumentStepVariant : Swift.RawRepresentable {}
+extension Onfido.FaceResultVariant : Swift.Equatable {}
+extension Onfido.FaceResultVariant : Swift.Hashable {}
+extension Onfido.FaceResultVariant : Swift.RawRepresentable {}
+extension Onfido.Gender : Swift.Equatable {}
+extension Onfido.Gender : Swift.Hashable {}
+extension Onfido.Gender : Swift.RawRepresentable {}
+extension Onfido.IdNumberType : Swift.Equatable {}
+extension Onfido.IdNumberType : Swift.Hashable {}
+extension Onfido.IdNumberType : Swift.RawRepresentable {}
+extension Onfido.ONFlowConfigError : Swift.Equatable {}
+extension Onfido.ONFlowConfigError : Swift.Hashable {}
+extension Onfido.ONFlowConfigError : Swift.RawRepresentable {}
+extension Onfido.ONFlowError : Swift.Equatable {}
+extension Onfido.ONFlowError : Swift.Hashable {}
+extension Onfido.ONFlowError : Swift.RawRepresentable {}
+extension Onfido.ONFlowResultType : Swift.Equatable {}
+extension Onfido.ONFlowResultType : Swift.Hashable {}
+extension Onfido.ONFlowResultType : Swift.RawRepresentable {}
+extension Onfido.OnfidoConfigError : Swift.Equatable {}
+extension Onfido.OnfidoConfigError : Swift.Hashable {}

@@ -1,0 +1,16 @@
+PODS:
+  - Onfido (24.2.0)
+
+DEPENDENCIES:
+  - Onfido (= 24.2.0)
+
+SPEC REPOS:
+  trunk:
+    - Onfido
+
+SPEC CHECKSUMS:
+  Onfido: 5e881be263c88d785784b34c7870f3e3f6f7cf14
+
+PODFILE CHECKSUM: 6727ea51722dc56b31aa4f01408ad00ea9422db6
+
+COCOAPODS: 1.9.2
